@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ATR — Portal de Sistemas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0f0e;
+    --surface: #131917;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #f0f2f0;
+    --muted: #7a8a80;
+    --c1: #3ddc84;   /* verde ambiental */
+    --c2: #5bc4f5;   /* azul financeiro */
+    --c3: #f5a623;   /* âmbar geoespacial */
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    overflow-x: hidden;
+  }
+
+  /* background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* radial glow */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(61,220,132,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 860px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  /* header */
+  .header { text-align: center; }
+
+  .badge {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c1);
+    border: 1px solid rgba(61,220,132,0.25);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  h1 span {
+    color: var(--c1);
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.2s;
+    cursor: pointer;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 20px 20px 0 0;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+  .card:hover::before { opacity: 1; }
+  .card:active { transform: translateY(-1px) scale(0.99); }
+
+  .card-1::before { background: var(--c1); }
+  .card-2::before { background: var(--c2); }
+  .card-3::before { background: var(--c3); }
+
+  /* icon circle */
+  .icon-wrap {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+
+  .card-1 .icon-wrap { background: rgba(61,220,132,0.1); color: var(--c1); }
+  .card-2 .icon-wrap { background: rgba(91,196,245,0.1); color: var(--c2); }
+  .card-3 .icon-wrap { background: rgba(245,166,35,0.1); color: var(--c3); }
+
+  .card-body { flex: 1; }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 0.855rem;
+    color: var(--muted);
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .card-cta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: gap 0.2s;
+  }
+
+  .card-1 .card-cta { color: var(--c1); }
+  .card-2 .card-cta { color: var(--c2); }
+  .card-3 .card-cta { color: var(--c3); }
+
+  .card:hover .card-cta { gap: 10px; }
+
+  .arrow {
+    width: 16px; height: 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* footer */
+  .footer {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    opacity: 0.6;
+  }
+
+  /* entrance animation */
+  .header, .cards, .footer {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadein 0.55s ease forwards;
+  }
+  .cards { animation-delay: 0.12s; }
+  .footer { animation-delay: 0.22s; }
+
+  @keyframes fadein {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <header class="header">
+    <span class="badge">Portal ATR</span>
+    <h1>Sistemas <span>Integrados</span></h1>
+    <p class="subtitle">Selecione o sistema que deseja acessar.</p>
+  </header>
+
+  <section class="cards" aria-label="Sistemas disponíveis">
+
+    <a class="card card-1" href="https://controle-ambiental-atr.vercel.app/" target="_blank" rel="noopener">
+      <div class="icon-wrap">🌿</div>
+      <div class="card-body">
+        <p class="card-title">Controle Ambiental</p>
+        <p class="card-desc">Monitoramento e gestão de indicadores ambientais em tempo real.</p>
+      </div>
+      <span class="card-cta">
+        Acessar sistema
+        <span class="arrow">→</span>
+      </span>
+    </a>
+
+    <a class="card card-2" href="https://atrfinanceiro.ambiental-hirata.workers.dev/" target="_blank" rel="noopener">
+      <div class="icon-wrap">📊</div>
+      <div class="card-body">
+        <p class="card-title">Controle Financeiro</p>
+        <p class="card-desc">Gestão financeira, relatórios e acompanhamento de resultados.</p>
+      </div>
+      <span class="card-cta">
+        Acessar sistema
+        <span class="arrow">→</span>
+      </span>
+    </a>
+
+    <a class="card card-3" href="https://property-licenses-online.vercel.app/map" target="_blank" rel="noopener">
+      <div class="icon-wrap">🗺️</div>
+      <div class="card-body">
+        <p class="card-title">Licenças Geoespacial</p>
+        <p class="card-desc">Visualização geográfica e controle de licenças por propriedade.</p>
+      </div>
+      <span class="card-cta">
+        Acessar sistema
+        <span class="arrow">→</span>
+      </span>
+    </a>
+
+  </section>
+
+  <footer class="footer">ATR Sistemas &mdash; Todos os direitos reservados</footer>
+
+</div>
+
+</body>
+</html>
